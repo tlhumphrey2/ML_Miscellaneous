@@ -171,9 +171,9 @@ depData:= PROJECT(full_ds(number=5),TRANSFORM(Types.DiscreteField, SELF.number:=
 //Set RandomForest to generate a random forest of 25 trees selecting 3 features for splits using impurity:=1.0 and max depth:= 5
 learner := Classify.RandomForest(25, 3, 1.0, 5);
 ClassifyingModel := learner.learnc(IndepData, DepData); // model to use when classifying
-OUTPUT(ClassifyingModel,NAMED('learnc_output'), ALL); // group_id represent number of tree
+OUTPUT(ClassifyingModel,NAMED('ClassifyingModel'), ALL); // group_id represent number of tree
 ReadableModel:= learner.modelC(ClassifyingModel);  // transforming model to a easier way to read it
-OUTPUT(SORT(ReadableModel, group_id, node_id),NAMED('modelC_ouput'), ALL); // group_id represent number of tree
+OUTPUT(SORT(ReadableModel, group_id, node_id),NAMED('ReadableModel'), ALL); // group_id represent number of tree
 
 //Class distribution for each Instance
 ClassDist:= learner.ClassProbDistribC(IndepData, ClassifyingModel);
@@ -186,7 +186,8 @@ performance:= Classify.Compare(depData, class);
 OUTPUT(performance.CrossAssignments, NAMED('CrossAssig'));
 OUTPUT(performance.RecallByClass, NAMED('RecallByClass'));
 OUTPUT(performance.PrecisionByClass, NAMED('PrecisionByClass'));
-OUTPUT(performance.FP_Rate_ByClass, NAMED('FP_Rate_ByClass'));
+OUTPUT(performance.FP_Rate_ByClass, NAMED('FP_Rate_ByClass'));// False Positive Rate
+
 //Calculating Area Under the Curve for each Class
 AUC1:= Classify.AUC_ROC(ClassDist, 1, depData); //Area under ROC Curve for class "1"
 OUTPUT(AUC1, ALL, NAMED('AUC_1'));
